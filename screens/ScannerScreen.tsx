@@ -1,14 +1,17 @@
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 
 import { PRODUCTS } from '../constants/Products';
+import { CartContext } from '../providers';
 
 export default function ScannerScreen() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [product, setProduct] = useState({});
+
+  const { getCartCount } = useContext(CartContext);
 
   const { getItem, setItem } = useAsyncStorage('cartItems');
 
@@ -59,6 +62,7 @@ export default function ScannerScreen() {
       }
 
       await setItem(JSON.stringify(newCartItems));
+      await getCartCount();
     } catch (error) {
       return error;
     }

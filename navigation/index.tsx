@@ -7,12 +7,13 @@ import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
-import useCartCount from '../hooks/useCartCount';
+// import useCartCount from '../hooks/useCartCount';
 import useColorScheme from '../hooks/useColorScheme';
+import { CartContext } from '../providers';
 import CartScreen from '../screens/CartScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ModalScreen from '../screens/ModalScreen';
@@ -57,7 +58,9 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  const cartCount = useCartCount();
+  // const cartCount = useCartCount();
+
+  const { cartCount } = useContext(CartContext);
 
   return (
     <BottomTab.Navigator

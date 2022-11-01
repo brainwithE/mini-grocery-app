@@ -1,15 +1,18 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import CartItem from '../components/CartItem';
 import { View, Text } from '../components/Themed';
+import { CartContext } from '../providers';
 import { RootTabScreenProps } from '../types';
 
 export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
   const [cart, setCart] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
+
+  const { getCartCount } = useContext(CartContext);
 
   const { getItem, setItem } = useAsyncStorage('cartItems');
 
@@ -51,6 +54,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
 
       await setItem(JSON.stringify(cartArr));
       getDataFromStorage();
+      await getCartCount();
     }
   };
 
@@ -66,6 +70,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
 
       await setItem(JSON.stringify(cartArr));
       getDataFromStorage();
+      await getCartCount();
     }
   };
 
@@ -85,6 +90,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
 
       await setItem(JSON.stringify(cartArr));
       getDataFromStorage();
+      await getCartCount();
     }
   };
 

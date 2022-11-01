@@ -1,6 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useContext } from 'react';
 import { TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { CartContext } from '../providers';
 
 import { Text, View } from './Themed';
 
@@ -63,8 +65,11 @@ const Item = (props: ItemProps): JSX.Element => (
 );
 
 export default function ProductList(props: ProductListProps): JSX.Element {
+  const { getCartCount } = useContext(CartContext);
+
   const handleAddToCart = async (product: CartItem) => {
     let newCartItems: any[] = [];
+
     const cartJson = await AsyncStorage.getItem('cartItems');
     const cartObj = JSON.parse(cartJson);
 
@@ -93,6 +98,7 @@ export default function ProductList(props: ProductListProps): JSX.Element {
       }
 
       await AsyncStorage.setItem('cartItems', JSON.stringify(newCartItems));
+      await getCartCount();
     } catch (error) {
       return error;
     }
