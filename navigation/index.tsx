@@ -11,7 +11,6 @@ import React, { useContext } from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
-// import useCartCount from '../hooks/useCartCount';
 import useColorScheme from '../hooks/useColorScheme';
 import { CartContext } from '../providers';
 import CartScreen from '../screens/CartScreen';
@@ -58,7 +57,6 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  // const cartCount = useCartCount();
 
   const { cartCount } = useContext(CartContext);
 

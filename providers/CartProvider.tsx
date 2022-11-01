@@ -6,11 +6,21 @@ export const CartContext = createContext({});
 export const CartProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
 
-  const { getItem } = useAsyncStorage('cartItems');
+  const { getItem, setItem } = useAsyncStorage('cartItems');
+
+  useEffect(() => {
+    getCartCount();
+  }, []);
+
+  const getCartData = async () => {
+    const jsonValue = await getItem();
+    const cartArr = JSON.parse(jsonValue);
+
+    return cartArr;
+  };
 
   const getCartCount = async () => {
-    const jsonValue = await getItem();
-    const cartArr = JSON.parse(jsonValue) || [];
+    const cartArr = await getCartData();
 
     const totalCount = cartArr.reduce(
       (acc: any, item: { quantity: any }) => acc + item.quantity,
@@ -19,11 +29,13 @@ export const CartProvider = ({ children }) => {
     setCartCount(totalCount);
   };
 
-  useEffect(() => {
-    getCartCount();
-  }, []);
+  const saveCartData = async (cartArr) => {
+    await setItem(JSON.stringify(cartArr));
+  };
 
   return (
-    <CartContext.Provider value={{ cartCount, getCartCount }}>{children}</CartContext.Provider>
+    <CartContext.Provider value={{ cartCount, getCartCount, getCartData, saveCartData }}>
+      {children}
+    </CartContext.Provider>
   );
 };

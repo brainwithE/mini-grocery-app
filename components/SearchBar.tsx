@@ -7,6 +7,7 @@ interface Props {
   clicked: boolean;
   searchQuery: string;
   setSearchQuery: Function;
+  setActivateSearch: Function;
 }
 
 export default function SearchBar(props: Props): JSX.Element {
@@ -22,6 +23,7 @@ export default function SearchBar(props: Props): JSX.Element {
           placeholder="Search Product, Brand"
           value={props.searchQuery}
           onChangeText={handleSearch}
+          onFocus={() => props.setActivateSearch(true)}
         />
 
         {props.searchQuery !== '' && (

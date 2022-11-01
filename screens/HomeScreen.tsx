@@ -8,6 +8,7 @@ import { PRODUCTS } from '../constants/Products';
 import { RootTabScreenProps } from '../types';
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
+  const [activateSearch, setActivateSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [products, setProducts] = useState<object[]>([]);
 
@@ -25,8 +26,15 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
 
   return (
     <View style={styles.container}>
-      <SearchBar clicked={false} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <ProductList data={products} searchQuery={searchQuery} />
+      <SearchBar
+        clicked={false}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        setActivateSearch={setActivateSearch}
+      />
+      {activateSearch && searchQuery !== '' && (
+        <ProductList data={products} searchQuery={searchQuery} />
+      )}
     </View>
   );
 }

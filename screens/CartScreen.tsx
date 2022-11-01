@@ -1,5 +1,4 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { useContext, useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
@@ -12,9 +11,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
   const [cart, setCart] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
 
-  const { getCartCount } = useContext(CartContext);
-
-  const { getItem, setItem } = useAsyncStorage('cartItems');
+  const { getCartCount, getCartData, saveCartData } = useContext(CartContext);
 
   const hasItems = cart.length > 0;
 
@@ -34,9 +31,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
   }, [cart]);
 
   const getDataFromStorage = async () => {
-    const jsonValue = await getItem();
-    const cartArr = JSON.parse(jsonValue);
-
+    const cartArr = await getCartData();
     setCart(cartArr);
   };
 
@@ -45,22 +40,20 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
   };
 
   const handleRemoveItem = async (productID: number) => {
-    const jsonValue = await getItem();
-    const cartArr = JSON.parse(jsonValue);
+    const cartArr = await getCartData();
 
     if (cartArr) {
       const cartIndex = getCartIndex(cartArr, productID);
       cartArr.splice(cartIndex, 1);
 
-      await setItem(JSON.stringify(cartArr));
-      getDataFromStorage();
+      await saveCartData(cartArr);
+      await getDataFromStorage();
       await getCartCount();
     }
   };
 
   const handleIncreaseQty = async (productID: number) => {
-    const jsonValue = await getItem();
-    const cartArr = JSON.parse(jsonValue);
+    const cartArr = await getCartData();
 
     if (cartArr) {
       const cartIndex = getCartIndex(cartArr, productID);
@@ -68,15 +61,14 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
       cartArr[cartIndex].quantity = cartArr[cartIndex].quantity + 1;
       cartArr[cartIndex].totalPrice = cartArr[cartIndex].quantity * cartArr[cartIndex].price;
 
-      await setItem(JSON.stringify(cartArr));
-      getDataFromStorage();
+      await saveCartData(cartArr);
+      await getDataFromStorage();
       await getCartCount();
     }
   };
 
   const handleDecreaseQty = async (productID: number) => {
-    const jsonValue = await getItem();
-    const cartArr = JSON.parse(jsonValue);
+    const cartArr = await getCartData();
 
     if (cartArr) {
       const cartIndex = getCartIndex(cartArr, productID);
@@ -88,8 +80,8 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
         cartArr.splice(cartIndex, 1);
       }
 
-      await setItem(JSON.stringify(cartArr));
-      getDataFromStorage();
+      await saveCartData(cartArr);
+      await getDataFromStorage();
       await getCartCount();
     }
   };

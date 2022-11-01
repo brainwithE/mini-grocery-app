@@ -1,4 +1,3 @@
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
@@ -11,9 +10,7 @@ export default function ScannerScreen() {
   const [scanned, setScanned] = useState(false);
   const [product, setProduct] = useState({});
 
-  const { getCartCount } = useContext(CartContext);
-
-  const { getItem, setItem } = useAsyncStorage('cartItems');
+  const { getCartCount, getCartData, saveCartData } = useContext(CartContext);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -34,34 +31,30 @@ export default function ScannerScreen() {
 
   const handleAddToCart = async (scannedProduct: any) => {
     let newCartItems: any[] = [];
-    const cartJson = await getItem();
-    const cartArr = JSON.parse(cartJson);
+    const cartArr = await getCartData();
 
     try {
-      if (cartJson) {
-        newCartItems = cartArr;
+      const cartIndex = cartArr.findIndex((item) => item.id === scannedProduct.id);
 
-        const cartIndex = newCartItems.findIndex((item) => item.id === scannedProduct.id);
+      if (cartIndex === -1) {
+        if (cartArr.length !== 0) newCartItems = cartArr;
 
-        if (cartIndex > -1) {
-          const newQty = newCartItems[cartIndex].quantity + 1;
-
-          newCartItems[cartIndex].quantity = newQty;
-          newCartItems[cartIndex].totalPrice = newQty * newCartItems[cartIndex].price;
-        } else {
-          scannedProduct.quantity = 1;
-          scannedProduct.totalPrice = scannedProduct.price;
-
-          newCartItems.push(scannedProduct);
-        }
-      } else {
         scannedProduct.quantity = 1;
         scannedProduct.totalPrice = scannedProduct.price;
 
         newCartItems.push(scannedProduct);
       }
 
-      await setItem(JSON.stringify(newCartItems));
+      if (cartIndex > -1) {
+        newCartItems = cartArr;
+
+        const newQty = newCartItems[cartIndex].quantity + 1;
+
+        newCartItems[cartIndex].quantity = newQty;
+        newCartItems[cartIndex].totalPrice = newQty * newCartItems[cartIndex].price;
+      }
+
+      await saveCartData(newCartItems);
       await getCartCount();
     } catch (error) {
       return error;

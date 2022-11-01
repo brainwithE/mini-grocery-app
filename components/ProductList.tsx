@@ -1,9 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext } from 'react';
 import { TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { CartContext } from '../providers';
 
+import { CartContext } from '../providers';
 import { Text, View } from './Themed';
 
 interface ProductItem {
@@ -37,7 +36,7 @@ interface ItemProps {
   addToCart: Function;
 }
 
-const Item = (props: ItemProps): JSX.Element => (
+const Item = (props: ItemProps): JSX.Element | null => (
   <View style={styles.itemWrapper}>
     <View style={{ width: '70%' }}>
       <Text style={styles.itemCategory}>{props.product.category}</Text>
@@ -65,39 +64,35 @@ const Item = (props: ItemProps): JSX.Element => (
 );
 
 export default function ProductList(props: ProductListProps): JSX.Element {
-  const { getCartCount } = useContext(CartContext);
+  const { getCartCount, getCartData, saveCartData } = useContext(CartContext);
 
   const handleAddToCart = async (product: CartItem) => {
     let newCartItems: any[] = [];
 
-    const cartJson = await AsyncStorage.getItem('cartItems');
-    const cartObj = JSON.parse(cartJson);
+    const cartArr = await getCartData();
 
     try {
-      if (cartJson) {
-        newCartItems = cartObj;
+      const cartIndex = cartArr.findIndex((item) => item.id === product.id);
 
-        const cartIndex = newCartItems.findIndex((item) => item.id === product.id);
+      if (cartIndex === -1) {
+        if (cartArr.length !== 0) newCartItems = cartArr;
 
-        if (cartIndex > -1) {
-          const newQty = newCartItems[cartIndex].quantity + 1;
-
-          newCartItems[cartIndex].quantity = newQty;
-          newCartItems[cartIndex].totalPrice = newQty * newCartItems[cartIndex].price;
-        } else {
-          product.quantity = 1;
-          product.totalPrice = product.price;
-
-          newCartItems.push(product);
-        }
-      } else {
         product.quantity = 1;
         product.totalPrice = product.price;
 
         newCartItems.push(product);
       }
 
-      await AsyncStorage.setItem('cartItems', JSON.stringify(newCartItems));
+      if (cartIndex > -1) {
+        newCartItems = cartArr;
+
+        const newQty = newCartItems[cartIndex].quantity + 1;
+
+        newCartItems[cartIndex].quantity = newQty;
+        newCartItems[cartIndex].totalPrice = newQty * newCartItems[cartIndex].price;
+      }
+
+      await saveCartData(newCartItems);
       await getCartCount();
     } catch (error) {
       return error;
