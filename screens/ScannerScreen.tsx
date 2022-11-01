@@ -1,6 +1,6 @@
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, ToastAndroid } from 'react-native';
 
 import { PRODUCTS } from '../constants/Products';
 import { CartContext } from '../providers';
@@ -56,6 +56,7 @@ export default function ScannerScreen() {
 
       await saveCartData(newCartItems);
       await getCartCount();
+      await ToastAndroid.show('Item added to cart.', ToastAndroid.SHORT);
     } catch (error) {
       return error;
     }

@@ -5,6 +5,7 @@ export const CartContext = createContext({});
 
 export const CartProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState({});
 
   const { getItem, setItem } = useAsyncStorage('cartItems');
 
@@ -34,7 +35,15 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cartCount, getCartCount, getCartData, saveCartData }}>
+    <CartContext.Provider
+      value={{
+        cartCount,
+        getCartCount,
+        getCartData,
+        saveCartData,
+        selectedCategory,
+        setSelectedCategory,
+      }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ToastAndroid } from 'react-native';
 
 import { buildCategoryList } from '../builders/buildCategoryList';
 import CategoryList from '../components/CategoryList';
@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
   const [products, setProducts] = useState<object[]>([]);
   const [categories, setCategories] = useState<object[]>([]);
 
-  const { getCartCount, getCartData, saveCartData } = useContext(CartContext);
+  const { getCartCount, getCartData, saveCartData, setSelectedCategory } = useContext(CartContext);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -76,6 +76,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
 
       await saveCartData(newCartItems);
       await getCartCount();
+      await ToastAndroid.show('Item added to cart.', ToastAndroid.SHORT);
     } catch (error) {
       return error;
     }
@@ -93,7 +94,11 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
       {activateSearch && searchQuery !== '' ? (
         <ProductList data={products} searchQuery={searchQuery} handleAddToCart={handleAddToCart} />
       ) : (
-        <CategoryList data={categories} handleAddToCart={handleAddToCart} />
+        <CategoryList
+          data={categories}
+          handleAddToCart={handleAddToCart}
+          handleCategorySelection={setSelectedCategory}
+        />
       )}
     </View>
   );
