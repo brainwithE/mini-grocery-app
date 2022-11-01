@@ -27,6 +27,7 @@ export default function CartItem(props: any): JSX.Element {
 
       <View style={styles.itemActions}>
         <View style={styles.itemQtyWrapper}>
+          <Text style={{ marginRight: 5 }}>Qty:</Text>
           <TouchableOpacity onPress={() => props.decreaseQty(props.product.id)}>
             <View
               style={{

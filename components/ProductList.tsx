@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
@@ -37,13 +38,25 @@ interface ItemProps {
 const Item = (props: ItemProps): JSX.Element => (
   <View style={styles.itemWrapper}>
     <View style={{ width: '70%' }}>
-      <Text style={styles.itemName}>{props.product.display_name}</Text>
       <Text style={styles.itemCategory}>{props.product.category}</Text>
+      <Text style={styles.itemName}>{props.product.display_name}</Text>
       <Text>P {props.product.price}</Text>
     </View>
-    <View style={{ width: '30%', alignSelf: 'flex-end' }}>
-      <TouchableOpacity style={styles.button} onPress={() => props.addToCart(props.product)}>
-        <Text style={styles.buttonText}>Add to Cart</Text>
+    <View style={{ alignSelf: 'flex-end' }}>
+      <TouchableOpacity
+        onPress={() => props.addToCart(props.product)}
+        accessibilityHint="Add to Cart">
+        <MaterialCommunityIcons
+          name="cart-plus"
+          style={{
+            fontSize: 16,
+            color: '#777777',
+            backgroundColor: '#F0F0F3',
+            padding: 7,
+            borderRadius: 100,
+            alignSelf: 'flex-end',
+          }}
+        />
       </TouchableOpacity>
     </View>
   </View>
@@ -114,13 +127,22 @@ const styles = StyleSheet.create({
   itemWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    marginBottom: 15,
+    boxShadow: '0px 5px 15px #85a6bf1a',
+    padding: 15,
   },
   itemName: {
     fontWeight: 'bold',
   },
   itemCategory: {
     fontSize: 10,
+    alignSelf: 'flex-start',
+    backgroundColor: '#f3f3f3',
+    paddingVertical: 2,
+    padding: 5,
+    marginBottom: 5,
+    borderRadius: 5,
   },
   button: {
     backgroundColor: 'green',

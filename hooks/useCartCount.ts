@@ -10,8 +10,6 @@ export default function useCartCount() {
     const jsonValue = await getItem();
     const cartArr = JSON.parse(jsonValue) || [];
 
-    console.log('getDataFromStorage cartArr', cartArr);
-
     const totalCount = cartArr.reduce(
       (acc: any, item: { quantity: any }) => acc + item.quantity,
       0

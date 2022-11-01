@@ -1,6 +1,7 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 
 import CartItem from '../components/CartItem';
 import { View, Text } from '../components/Themed';
@@ -11,6 +12,8 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
   const [subtotal, setSubtotal] = useState(0);
 
   const { getItem, setItem } = useAsyncStorage('cartItems');
+
+  const hasItems = cart.length > 0;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -85,12 +88,38 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
     }
   };
 
+  const handleCheckoutAlert = () =>
+    Alert.alert('Coming Soon', 'Checkout feature is not working at the moment', [
+      { text: 'OK', onPress: () => console.log('OK Pressed') },
+    ]);
+
+  if (!hasItems) {
+    return (
+      <View style={styles.container}>
+        <View style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}>
+          <MaterialCommunityIcons
+            name="cart"
+            style={{
+              fontSize: 50,
+              textAlign: 'center',
+              color: '#777777',
+              padding: 20,
+            }}
+          />
+          <Text style={{ fontSize: 20, textAlign: 'center' }}>Your Cart is Empty</Text>
+          <Text style={styles.ctaLink}>Start shopping</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <View>
           {cart.map((item) => (
             <CartItem
+              key={item.id}
               product={item}
               removeItem={handleRemoveItem}
               increaseQty={handleIncreaseQty}
@@ -106,10 +135,15 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
             <Text style={styles.orderInfoItemLabel}>Subtotal</Text>
             <Text style={styles.orderInfoItemValue}>P {subtotal}</Text>
           </View>
+
+          <View style={styles.orderInfoItem}>
+            <Text style={styles.orderInfoTotalLabel}>Total</Text>
+            <Text style={styles.orderInfoTotalValue}>P {subtotal}</Text>
+          </View>
         </View>
 
         <View style={styles.cartCTA}>
-          <TouchableOpacity style={styles.checkoutButton}>
+          <TouchableOpacity onPress={() => handleCheckoutAlert()} style={styles.checkoutButton}>
             <Text style={styles.buttonText}>CHECKOUT (P {subtotal})</Text>
           </TouchableOpacity>
 
@@ -155,6 +189,19 @@ const styles = StyleSheet.create({
   orderInfoItemValue: {
     fontSize: 12,
     fontWeight: '400',
+    color: '#000',
+    opacity: 0.8,
+  },
+  orderInfoTotalLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    maxWidth: '80%',
+    color: '#000',
+    opacity: 0.5,
+  },
+  orderInfoTotalValue: {
+    fontSize: 14,
+    fontWeight: '600',
     color: '#000',
     opacity: 0.8,
   },
