@@ -1,104 +1,15 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useContext } from 'react';
-import { TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
-import { CartContext } from '../providers';
-import { Text, View } from './Themed';
-
-interface ProductItem {
-  id: number;
-  display_name: string;
-  barcode: number;
-  price: number;
-  brand: string;
-  category: string;
-}
-
-interface CartItem {
-  id: number;
-  display_name: string;
-  barcode: number;
-  price: number;
-  brand: string;
-  category: string;
-  quantity: number;
-  totalPrice: number;
-}
+import ProductItem from './ProductItem';
+import { View } from './Themed';
 
 interface ProductListProps {
   searchQuery: string;
   data: any;
-  // data: ProductItem[];
+  handleAddToCart: Function;
 }
-
-interface ItemProps {
-  product: ProductItem;
-  addToCart: Function;
-}
-
-const Item = (props: ItemProps): JSX.Element | null => (
-  <View style={styles.itemWrapper}>
-    <View style={{ width: '70%' }}>
-      <Text style={styles.itemCategory}>{props.product.category}</Text>
-      <Text style={styles.itemName}>{props.product.display_name}</Text>
-      <Text>P {props.product.price}</Text>
-    </View>
-    <View style={{ alignSelf: 'flex-end' }}>
-      <TouchableOpacity
-        onPress={() => props.addToCart(props.product)}
-        accessibilityHint="Add to Cart">
-        <MaterialCommunityIcons
-          name="cart-plus"
-          style={{
-            fontSize: 16,
-            color: '#777777',
-            backgroundColor: '#F0F0F3',
-            padding: 7,
-            borderRadius: 100,
-            alignSelf: 'flex-end',
-          }}
-        />
-      </TouchableOpacity>
-    </View>
-  </View>
-);
 
 export default function ProductList(props: ProductListProps): JSX.Element {
-  const { getCartCount, getCartData, saveCartData } = useContext(CartContext);
-
-  const handleAddToCart = async (product: CartItem) => {
-    let newCartItems: any[] = [];
-
-    const cartArr = await getCartData();
-
-    try {
-      const cartIndex = cartArr.findIndex((item) => item.id === product.id);
-
-      if (cartIndex === -1) {
-        if (cartArr.length !== 0) newCartItems = cartArr;
-
-        product.quantity = 1;
-        product.totalPrice = product.price;
-
-        newCartItems.push(product);
-      }
-
-      if (cartIndex > -1) {
-        newCartItems = cartArr;
-
-        const newQty = newCartItems[cartIndex].quantity + 1;
-
-        newCartItems[cartIndex].quantity = newQty;
-        newCartItems[cartIndex].totalPrice = newQty * newCartItems[cartIndex].price;
-      }
-
-      await saveCartData(newCartItems);
-      await getCartCount();
-    } catch (error) {
-      return error;
-    }
-  };
-
   const renderItem = ({ item }: any) => {
     const query = props.searchQuery.toUpperCase().trim().replace(/\s/g, '');
     if (
@@ -106,7 +17,7 @@ export default function ProductList(props: ProductListProps): JSX.Element {
       item.brand.toUpperCase().includes(query) ||
       item.category.toUpperCase().includes(query)
     ) {
-      return <Item product={item} addToCart={handleAddToCart} />;
+      return <ProductItem product={item} addToCart={props.handleAddToCart} />;
     }
 
     return null;
@@ -124,33 +35,4 @@ export default function ProductList(props: ProductListProps): JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
-  itemWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-    boxShadow: '0px 5px 15px #85a6bf1a',
-    padding: 15,
-  },
-  itemName: {
-    fontWeight: 'bold',
-  },
-  itemCategory: {
-    fontSize: 10,
-    alignSelf: 'flex-start',
-    backgroundColor: '#f3f3f3',
-    paddingVertical: 2,
-    padding: 5,
-    marginBottom: 5,
-    borderRadius: 5,
-  },
-  button: {
-    backgroundColor: 'green',
-    padding: 5,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-  },
-});
+// const styles = StyleSheet.create({});

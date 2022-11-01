@@ -1,3 +1,11 @@
+export const FEATURED_PRODUCT_CATEGORIES = [
+  'Alcohol',
+  'Softdrinks',
+  'Hair Care',
+  'Seasonings and Mixes',
+  'Rice and Noodles',
+];
+
 export const PRODUCTS = [
   {
     id: 11551,
