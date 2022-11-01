@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { StyleSheet, ToastAndroid } from 'react-native';
+import { Button, StyleSheet, ToastAndroid, TouchableOpacity } from 'react-native';
 
 import { buildCategoryList } from '../builders/buildCategoryList';
 import CategoryList from '../components/CategoryList';
@@ -94,11 +94,21 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
       {activateSearch && searchQuery !== '' ? (
         <ProductList data={products} searchQuery={searchQuery} handleAddToCart={handleAddToCart} />
       ) : (
-        <CategoryList
-          data={categories}
-          handleAddToCart={handleAddToCart}
-          handleCategorySelection={setSelectedCategory}
-        />
+        <>
+          <CategoryList
+            data={categories}
+            handleAddToCart={handleAddToCart}
+            handleCategorySelection={setSelectedCategory}
+          />
+          <View style={{ margin: 20 }}>
+            <Button
+              title="See All Categories"
+              onPress={() => {
+                navigation.navigate('Categories');
+              }}
+            />
+          </View>
+        </>
       )}
     </View>
   );

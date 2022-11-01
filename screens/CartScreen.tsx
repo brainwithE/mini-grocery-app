@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useContext, useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, StyleSheet, ToastAndroid, TouchableOpacity } from 'react-native';
 
 import CartItem from '../components/CartItem';
 import { View, Text } from '../components/Themed';
@@ -49,6 +49,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
       await saveCartData(cartArr);
       await getDataFromStorage();
       await getCartCount();
+      await ToastAndroid.show('Item removed from cart.', ToastAndroid.SHORT);
     }
   };
 

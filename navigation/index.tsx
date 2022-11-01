@@ -14,6 +14,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { CartContext } from '../providers';
 import CartScreen from '../screens/CartScreen';
+import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryDetailsScreen from '../screens/CategoryDetailsScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ModalScreen from '../screens/ModalScreen';
@@ -44,6 +45,7 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="Categories" component={CategoriesScreen} />
         <Stack.Screen name="CategoryDetails" component={CategoryDetailsScreen} />
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
