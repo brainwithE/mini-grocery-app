@@ -100,6 +100,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
             handleAddToCart={handleAddToCart}
             handleCategorySelection={setSelectedCategory}
           />
+
           <View style={{ margin: 20 }}>
             <Button
               title="See All Categories"
@@ -118,6 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 50,
+    marginBottom: 80,
   },
   title: {
     fontSize: 20,

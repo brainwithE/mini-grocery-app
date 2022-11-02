@@ -25,6 +25,7 @@ export default function CategoriesScreen({ navigation }) {
       <ScrollView>
         {categories.map((item) => (
           <TouchableOpacity
+            key={item.category}
             style={{
               height: 50,
               margin: 5,
