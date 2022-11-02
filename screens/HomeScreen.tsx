@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Button, StyleSheet, ToastAndroid, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, ToastAndroid } from 'react-native';
 
 import { buildCategoryList } from '../builders/buildCategoryList';
 import CategoryList from '../components/CategoryList';
@@ -76,9 +76,10 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
 
       await saveCartData(newCartItems);
       await getCartCount();
+
       await ToastAndroid.show('Item added to cart.', ToastAndroid.SHORT);
     } catch (error) {
-      return error;
+      console.log('HomeScreen - handleAddToCart() error:', error);
     }
   };
 
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 50,
-    marginBottom: 80,
+    paddingBottom: 150,
   },
   title: {
     fontSize: 20,

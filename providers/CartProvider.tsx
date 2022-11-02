@@ -14,20 +14,25 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const getCartData = async () => {
-    const jsonValue = await getItem();
-    const cartArr = JSON.parse(jsonValue);
+    try {
+      const jsonValue = await getItem();
+      const cartArr = await JSON.parse(jsonValue || '[]');
 
-    return cartArr;
+      return cartArr;
+    } catch (error) {
+      console.log('CartProvider - getCartData() error:', error);
+    }
   };
 
   const getCartCount = async () => {
     const cartArr = await getCartData();
 
-    const totalCount = cartArr.reduce(
+    const totalCount = await cartArr.reduce(
       (acc: any, item: { quantity: any }) => acc + item.quantity,
       0
     );
-    setCartCount(totalCount);
+
+    await setCartCount(totalCount);
   };
 
   const saveCartData = async (cartArr) => {
