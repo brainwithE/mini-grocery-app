@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 
 import ProductItem from './ProductItem';
 import { View } from './Themed';

@@ -3,18 +3,24 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { Text, View } from './Themed';
 
-// interface Cart {
-//   id: number;
-//   display_name: string;
-//   barcode: number;
-//   price: number;
-//   brand: string;
-//   category: string;
-//   quantity: number;
-//   totalPrice: number;
-// }
+interface Cart {
+  product: Product;
+  decreaseQty: (id: number) => void;
+  increaseQty: (id: number) => void;
+  removeItem: (id: number) => void;
+}
+interface Product {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+  category: string;
+  quantity: number;
+  totalPrice: number;
+}
 
-export default function CartItem(props: any): JSX.Element {
+export default function CartItem(props: Cart): JSX.Element {
   return (
     <View style={styles.itemWrapper}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

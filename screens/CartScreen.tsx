@@ -7,6 +7,17 @@ import { View, Text } from '../components/Themed';
 import { CartContext } from '../providers';
 import { RootTabScreenProps } from '../types';
 
+interface CartItemType {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+  quantity: number;
+  totalPrice: number;
+  category: string;
+}
+
 export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
   const [cart, setCart] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
@@ -25,13 +36,14 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
 
   useEffect(() => {
     if (cart) {
-      const cartSubtotal = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+      const cartSubtotal = cart.reduce((acc, item: CartItemType) => acc + item.totalPrice, 0);
       setSubtotal(cartSubtotal);
     }
   }, [cart]);
 
   const getDataFromStorage = async () => {
     const cartArr = await getCartData();
+    console.log('cartArr', cartArr);
     setCart(cartArr);
   };
 
@@ -61,6 +73,8 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
 
       cartArr[cartIndex].quantity = cartArr[cartIndex].quantity + 1;
       cartArr[cartIndex].totalPrice = cartArr[cartIndex].quantity * cartArr[cartIndex].price;
+
+      console.log('cartArr', cartArr);
 
       await saveCartData(cartArr);
       await getDataFromStorage();
@@ -116,7 +130,7 @@ export default function CartScreen({ navigation }: RootTabScreenProps<'Cart'>) {
     <View style={styles.container}>
       <ScrollView>
         <View>
-          {cart.map((item) => (
+          {cart.map((item: CartItemType) => (
             <CartItem
               key={item.id}
               product={item}

@@ -21,6 +21,19 @@ interface CartItem {
   totalPrice: number;
 }
 
+interface Category {
+  category: string;
+  data: Product[];
+}
+
+interface Product {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+}
+
 export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
   const [activateSearch, setActivateSearch] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -40,7 +53,9 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
   const getDataFromStorage = () => {
     const categories = buildCategoryList(PRODUCTS);
 
-    const categoryData = categories.filter((data) =>
+    console.log('categories', categories);
+
+    const categoryData = categories.filter((data: Category) =>
       FEATURED_PRODUCT_CATEGORIES.includes(data.category)
     );
 
@@ -54,7 +69,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
     const cartArr = await getCartData();
 
     try {
-      const cartIndex = cartArr.findIndex((item) => item.id === product.id);
+      const cartIndex = cartArr.findIndex((item: CartItem) => item.id === product.id);
 
       if (cartIndex === -1) {
         if (cartArr.length !== 0) newCartItems = cartArr;

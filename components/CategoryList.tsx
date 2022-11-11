@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { SectionList, StyleSheet, TouchableOpacity } from 'react-native';
+import { SectionList, TouchableOpacity } from 'react-native';
 
 import ProductItem from './ProductItem';
 import { Text, View } from './Themed';

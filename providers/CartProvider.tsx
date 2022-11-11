@@ -1,9 +1,42 @@
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect, createContext } from 'react';
 
-export const CartContext = createContext({});
+// type CartContextType = {
+//   cartCount: number;
+//   getCartCount: () => Promise<void>;
+//   getCartData: () => Promise<void>;
+//   saveCartData: (cartArr: ProductCart[]) => Promise<void>;
+//   selectedCategory: Category | object;
+//   setSelectedCategory: (state: Category) => void;
+// };
 
-export const CartProvider = ({ children }) => {
+// interface Category {
+//   category: string;
+//   data: Product[];
+// }
+
+// export const CartContext = createContext<CartContextType | null>(null);
+
+interface Product {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+}
+
+interface ProductCart extends Product {
+  quantity: number;
+  totalPrice: number;
+}
+
+interface Props {
+  children: JSX.Element;
+}
+
+export const CartContext = createContext<any>(null);
+
+export const CartProvider = ({ children }: Props) => {
   const [cartCount, setCartCount] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState({});
 
@@ -35,7 +68,7 @@ export const CartProvider = ({ children }) => {
     await setCartCount(totalCount);
   };
 
-  const saveCartData = async (cartArr) => {
+  const saveCartData = async (cartArr: ProductCart[]) => {
     await setItem(JSON.stringify(cartArr));
   };
 

@@ -1,12 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect } from 'react';
-import { FlatList, Platform, StyleSheet, ToastAndroid } from 'react-native';
+import { FlatList, ToastAndroid } from 'react-native';
 
 import ProductItem from '../components/ProductItem';
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import { CartContext } from '../providers';
+import { RootTabScreenProps } from '../types';
 
-export default function CategoryDetailsScreen({ navigation }) {
+interface CartItemType {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+  quantity: number;
+  totalPrice: number;
+  category: string;
+}
+
+export default function CategoryDetailsScreen({
+  navigation,
+}: RootTabScreenProps<'CategoryDetails'>) {
   const { getCartCount, getCartData, saveCartData, selectedCategory } = useContext(CartContext);
 
   useEffect(() => {
@@ -19,7 +32,7 @@ export default function CategoryDetailsScreen({ navigation }) {
     const cartArr = await getCartData();
 
     try {
-      const cartIndex = cartArr.findIndex((item) => item.id === product.id);
+      const cartIndex = cartArr.findIndex((item: CartItemType) => item.id === product.id);
 
       if (cartIndex === -1) {
         if (cartArr.length !== 0) newCartItems = cartArr;
@@ -60,20 +73,3 @@ export default function CategoryDetailsScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

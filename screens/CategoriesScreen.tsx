@@ -1,12 +1,26 @@
 import { useContext, useEffect, useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, ToastAndroid, TouchableOpacity } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 
 import { buildCategoryList } from '../builders/buildCategoryList';
 import { Text, View } from '../components/Themed';
 import { PRODUCTS } from '../constants/Products';
 import { CartContext } from '../providers';
+import { RootTabScreenProps } from '../types';
 
-export default function CategoriesScreen({ navigation }) {
+interface Category {
+  category: string;
+  data: Product[];
+}
+
+interface Product {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+}
+
+export default function CategoriesScreen({ navigation }: RootTabScreenProps<'Categories'>) {
   const [categories, setCategories] = useState([]);
 
   const { setSelectedCategory } = useContext(CartContext);
@@ -23,7 +37,7 @@ export default function CategoriesScreen({ navigation }) {
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <ScrollView>
-        {categories.map((item) => (
+        {categories.map((item: Category) => (
           <TouchableOpacity
             key={item.category}
             style={{
@@ -43,20 +57,3 @@ export default function CategoriesScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

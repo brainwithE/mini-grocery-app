@@ -30,6 +30,8 @@ export type RootTabParamList = {
   Home: undefined;
   Cart: undefined;
   Scanner: undefined;
+  Categories: undefined;
+  CategoryDetails: undefined;
   TabOne: undefined;
   TabTwo: undefined;
 };

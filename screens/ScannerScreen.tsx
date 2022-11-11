@@ -5,10 +5,25 @@ import { Text, View, StyleSheet, Button, ToastAndroid } from 'react-native';
 import { PRODUCTS } from '../constants/Products';
 import { CartContext } from '../providers';
 
+interface CartItem {
+  id: number;
+  display_name: string;
+  barcode: number;
+  price: number;
+  brand: string;
+  category: string;
+  quantity: number;
+  totalPrice: number;
+}
+
+interface Barcode {
+  data: string;
+}
+
 export default function ScannerScreen() {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState<any>({});
 
   const { getCartCount, getCartData, saveCartData } = useContext(CartContext);
 
@@ -21,7 +36,7 @@ export default function ScannerScreen() {
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ data }) => {
+  const handleBarCodeScanned = ({ data }: Barcode) => {
     setScanned(true);
 
     const scannedProduct = PRODUCTS.find((item) => item.barcode === parseInt(data, 10));
@@ -34,7 +49,7 @@ export default function ScannerScreen() {
     const cartArr = await getCartData();
 
     try {
-      const cartIndex = cartArr.findIndex((item) => item.id === scannedProduct.id);
+      const cartIndex = cartArr.findIndex((item: CartItem) => item.id === scannedProduct.id);
 
       if (cartIndex === -1) {
         if (cartArr.length !== 0) newCartItems = cartArr;
